@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
+use \App\Http\Controllers\BasketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,8 +11,6 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 */
-
-//Route::resource('products', ProductController::class);
 
 //Public routes
 Route::get('/products/{id}', [ProductController::class, 'show']);
@@ -27,4 +26,8 @@ Route::middleware(['auth:sanctum', 'role:Admin'])->group( function () {
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+// User routes
+Route::middleware(['auth:sanctum', 'role:Admin|User'])->group( function () {
+    Route::post('/addToBasket/{id}', [BasketController::class, 'store']);
 });
