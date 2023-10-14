@@ -9,15 +9,21 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    // Функция регистрации
     public function register(Request $request){
         $fields = $request->validate([
-            'name' => 'required|string',
+            'firstName' => 'required|string',
+            'secondName' => 'required|string',
+            'lastName' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string'
         ]);
 
         $user = User::create([
-            'name' => $fields['name'],
+            'firstName' => $fields['firstName'],
+            'secondName' => $fields['secondName'],
+            'lastName' => $fields['lastName'],
+            'roleID' => 2,
             'email' => $fields['email'],
             'password' => bcrypt($fields['password'])
         ]);
@@ -29,7 +35,7 @@ class AuthController extends Controller
         ];
         return response($response,201);
     }
-
+    // Функция авторизации
     public function login(Request $request){
         $fields = $request->validate([
             'email' => 'required|string',
@@ -55,6 +61,7 @@ class AuthController extends Controller
         ];
         return response($response,201);
     }
+    // Функция выхода
     public function logout(Request $request){
         auth()->user()->tokens()->delete();
         return [
