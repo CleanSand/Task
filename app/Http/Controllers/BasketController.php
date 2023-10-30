@@ -3,23 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Basket;
+use http\Message;
 use Illuminate\Http\Request;
 
 class BasketController extends Controller
 {
     public function index()
     {
-        return Basket::all();
+        $userID = auth()->user()->id;
+        return Basket::where('userID', 'like', $userID)->get();
     }
 
     public function store(Request $request, int $id)
     {
         $userID = auth()->user()->id;
-        $data = $request->all();
-        $data['userID'] = $userID;
-        $data['productID'] = $id;
-        return Basket::create($data);
+
+        $basket = Basket::where('userID', $userID)
+            ->where('productID', $id)
+            ->first();
+
+        if ($basket) {
+            $basket->increment('amount', 1);
+        } else {
+            $basket = Basket::create([
+                'userID' => $userID,
+                'productID' => $id,
+                'amount' => 1,
+            ]);
+        }
+
+        return $basket;
     }
+
 
 
     public function show(Basket $basket)
@@ -39,10 +54,19 @@ class BasketController extends Controller
         return $basket;
     }
 
-    public function destroy(Basket $basket)
+    public function destroy(Basket $basket, int $id)
     {
-        $basket->delete();
+        $userID = auth()->user()->id;
 
-        return response()->json();
+        $basket = Basket::where('userID', $userID)
+            ->where('productID', $id)
+            ->first();
+        if($basket){
+            return Basket::destroy($id);
+        }else{
+            return response([
+                'message' => 'Forbidden for you'
+            ], 403);
+        }
     }
 }

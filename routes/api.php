@@ -29,5 +29,7 @@ Route::middleware(['auth:sanctum', 'role:Admin'])->group( function () {
 });
 // User routes
 Route::middleware(['auth:sanctum', 'role:Admin|User'])->group( function () {
-    Route::post('/addToBasket/{id}', [BasketController::class, 'store']);
+    Route::post('/basket/{id}', [BasketController::class, 'store']);
+    Route::delete('/basket/{id}', [BasketController::class, 'destroy']);
+    Route::get('/basket', [BasketController::class, 'index']);
 });
