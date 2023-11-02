@@ -1,4 +1,4 @@
-name: node_app
+name: PHP_APP
 
 on:
   push:
