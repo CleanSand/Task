@@ -4,21 +4,22 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: /docker/Dockerfile
+            dockerfile: /docker/Nginx.Dockerfile
         ports:
             -   '8098:80'
         links:
             -   fpm
         volumes:
-            - ./:/var/www/laravel-docker
+            - ./:/var/www/html
     fpm:
         build:
             context: .
-            dockerfile: docker/Dockerfile
+            dockerfile: docker/Fpm.Dockerfile
         volumes:
-            -   ./:/var/www/laravel-docker
+            -   ./:/var/www/html
         links:
             -   mysql
+        entrypoint: ./1.sh
     mysql:
         image: mysql:5.7
         ports:
