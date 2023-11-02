@@ -4,7 +4,7 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: /docker/Nginx.Dockerfile
+            dockerfile: /docker/Dockerfile
         ports:
             -   '8098:80'
         links:
@@ -14,7 +14,7 @@ services:
     fpm:
         build:
             context: .
-            dockerfile: docker/Fpm.Dockerfile
+            dockerfile: docker/Dockerfile
         volumes:
             -   ./:/var/www/laravel-docker
         links:
